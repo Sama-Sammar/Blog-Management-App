@@ -1,0 +1,36 @@
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 25px;
+}
+
+.pageTitle {
+    text-align: center;
+    margin: 30px 0;
+    font-size: 30px;
+    letter-spacing: 3px;
+}
+
+.cards {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
