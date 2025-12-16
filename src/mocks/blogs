@@ -1,0 +1,40 @@
+const blogs = [
+        {
+            imgId: 1,
+            title: "10 Tips to Improve Your Frontend Skills",
+            description:
+                "Learn simple techniques to write cleaner CSS and structure your HTML correctly.",
+        },
+        {
+            imgId: 2,
+            title: "How to Stay Productive While Studying",
+            description:
+                "Planning your tasks and taking small breaks can boost your focus and efficiency.",
+        },
+        {
+            imgId: 3,
+            title: "AI Tools Changing the Future",
+            description:
+                "New AI models are helping developers write code faster with improved accuracy.",
+        },
+        {
+            imgId: 4,
+            title: "Minimalist UI Designs You Should Try",
+            description:
+                "Explore clean layouts and balanced spacing for a professional modern look.",
+        },
+        {
+            imgId: 5,
+            title: "Why Responsive Design Matters",
+            description:
+                "A responsive website improves user experience and adapts to any screen size.",
+        },
+        {
+            imgId: 6,
+            title: "5 Healthy Habits for a Better Day",
+            description:
+                "Walking daily and drinking enough water can greatly improve your energy.",
+        },
+    ];
+    
+export default blogs;
