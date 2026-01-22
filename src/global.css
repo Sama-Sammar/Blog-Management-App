@@ -1,6 +1,55 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.bootBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.bootBox {
+  background: rgba(0, 0, 0, 0.75);
+  padding: 20px 28px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.bootSpinner {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  border-top-color: transparent;
+  animation: bootSpin 0.8s linear infinite;
+}
+
+.bootText {
+  margin: 0;
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+}
+
+@keyframes bootSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }

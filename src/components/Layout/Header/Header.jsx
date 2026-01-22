@@ -1,24 +1,59 @@
+import { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styles from "./Header.module.css";
 
 function Header() {
-    return (
-        <header className={styles.header}>
-            <div className={styles.logo}>BLOG</div>
+  const { t, i18n } = useTranslation();
 
-            <input type="checkbox" id="menu-toggle" className={styles.toggle} />
+  const toggleLang = () => {
+    const newLang = i18n.language === "en" ? "ar" : "en";
+    i18n.changeLanguage(newLang);
+  };
 
-            <label htmlFor="menu-toggle" className={styles.hamburger}>
-                <span></span>
-                <span></span>
-                <span></span>
-            </label>
+  useEffect(() => {
+    const isArabic = i18n.language === "ar";
+    document.documentElement.lang = i18n.language;
+    document.documentElement.dir = isArabic ? "rtl" : "ltr";
+  }, [i18n.language]);
 
-            <nav className={styles.nav}>
-                <a href="#">Home</a>
-                <a href="#">Add New Blog</a>
-            </nav>
-        </header>
-    );
+  return (
+    <header className={styles.header}>
+      <div className={styles.logo}>{t("blog")}</div>
+
+      <input type="checkbox" id="menu-toggle" className={styles.toggle} />
+
+      <label htmlFor="menu-toggle" className={styles.hamburger}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+
+      <nav className={styles.nav}>
+        <NavLink
+          to="/"
+          className={({ isActive }) => (isActive ? styles.active : undefined)}
+        >
+          {t("home")}
+        </NavLink>
+
+        <NavLink
+          to="/blog/new"
+          className={({ isActive }) => (isActive ? styles.active : undefined)}
+        >
+          {t("addBlog")}
+        </NavLink>
+
+        <button
+          type="button"
+          className={styles.langBtn}
+          onClick={toggleLang}
+        >
+          {i18n.language === "en" ? "AR" : "EN"}
+        </button>
+      </nav>
+    </header>
+  );
 }
 
 export default Header;

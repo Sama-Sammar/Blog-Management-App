@@ -1,50 +1,78 @@
-# React Blog – Static UI Task
+📝 Blog Management Application
+A simple blog management system built with React, allowing users to view, add, edit, and delete blogs with form validation, pagination, and state management.
 
-This project is a simple static blog page built using **React**.  
-It is a conversion of a previously created **HTML & CSS static page** into a React application as part of a training task.
+🚀 Features
+- View blogs with pagination (6 blogs per page)
+- Add new blog with full form validation
+- Edit existing blogs
+- Delete blogs
+- Dynamic page title based on route
+- Loader handling using Redux
+- Blogs stored in Local Storage
+- Supports i18n and RTL layout using PostCSS
 
----
+🛠️ Technologies Used
+React,React Router DOM,React Hook Form,Redux Toolkit,Local Storage,i18n,PostCSS RTL
 
-## 🚀 Technologies Used
-- React (with Vite)
-- JavaScript (ES6)
-- HTML5
-- CSS3
+📄 Pages
+🏠 Home Page
+Displays list of blogs
+Pagination (Next / Previous)
+Edit & Delete actions for each blog
+Dynamic title: Home
 
----
+➕ Add New Blog Page
+Form with Title & Description
+Validation using React Hook Form
+Button disabled until form is valid
+Dynamic title: Add New Blog
 
-## 📌 Project Description
-The project demonstrates:
-- Basic React setup using Vite
-- JSX syntax
-- Functional Components
-- Rendering lists using `map`
-- Converting static HTML structure into React components
-- Applying existing CSS styles in a React project
+✏️ Edit Blog Mode
+Same page as Add Blog
+Pre-filled form data
+Button label changes to Edit Blog
+Dynamic title: Edit Blog
 
-The UI includes:
-- Header with navigation
-- Blog cards section
-- Responsive layout
-- Footer
+✅ Form Validation Rules
+- Title:
+English characters only
+Max length: 50
+First letter must be capitalized
+No special characters (except spaces)
+- Description:
+English characters only
+Max length: 1000
+No special characters (except spaces)
+- And same for Arabic
 
----
+🔄 Blog Flow
+Add Blog
+User fills valid data
+Clicks Add Blog
+Redirected to Home Page
+New blog appears at the top (first page)
+Edit Blog
+Click edit icon on blog card
+Form opens with existing data
+User edits and submits
+Blog updated and redirected to Home Page
+Delete Blog
+Removes blog from list and local storage
 
-## 🛠 How to Run the Project Locally
+⏳ Loader Management
+Redux slice used to manage loading state
+Loader shown during async operations
+Loader hidden on success or failure
 
-1. Clone the repository: 
-git clone https://github.com/Sama-Sammar/React-First-Task.git
+💾 Local Storage
+Blogs are persisted using Local Storage
+Data remains after page refresh
 
-2. Navigate to the project folder:
-cd myReact1
-
-3. Install dependencies:
+📦 Installation & Run
 npm install
+npm start
 
-4. Start the development server:
-npm run dev
-
-📚 Notes
-This project focuses on UI structure only (no state or backend logic).
-It is intended as a first step into React development.
-
+📌 Notes
+React Router Loaders used for fetching blogs
+Clean and modular code structure
+User-friendly UI with smooth navigation

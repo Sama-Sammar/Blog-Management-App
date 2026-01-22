@@ -1,0 +1,10 @@
+.main {
+  width: min(1200px, 92%);
+  margin: 0 auto;
+  padding: 24px 0;
+  flex: 1;
+}
+
+.pageTitle {
+  margin: 0 0 18px;
+}

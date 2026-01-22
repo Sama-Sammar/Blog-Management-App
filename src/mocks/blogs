@@ -1,40 +1,52 @@
 const blogs = [
-        {
-            imgId: 1,
-            title: "10 Tips to Improve Your Frontend Skills",
-            description:
-                "Learn simple techniques to write cleaner CSS and structure your HTML correctly.",
-        },
-        {
-            imgId: 2,
-            title: "How to Stay Productive While Studying",
-            description:
-                "Planning your tasks and taking small breaks can boost your focus and efficiency.",
-        },
-        {
-            imgId: 3,
-            title: "AI Tools Changing the Future",
-            description:
-                "New AI models are helping developers write code faster with improved accuracy.",
-        },
-        {
-            imgId: 4,
-            title: "Minimalist UI Designs You Should Try",
-            description:
-                "Explore clean layouts and balanced spacing for a professional modern look.",
-        },
-        {
-            imgId: 5,
-            title: "Why Responsive Design Matters",
-            description:
-                "A responsive website improves user experience and adapts to any screen size.",
-        },
-        {
-            imgId: 6,
-            title: "5 Healthy Habits for a Better Day",
-            description:
-                "Walking daily and drinking enough water can greatly improve your energy.",
-        },
-    ];
-    
+  {
+    imgId: 1,
+    titleEn: "10 Tips to Improve Your Frontend Skills",
+    descEn:
+      "Learn simple techniques to write cleaner CSS and structure your HTML correctly.",
+    titleAr: "10 نصائح لتطوير مهارات الفرونت اند",
+    descAr: "تعلم تقنيات بسيطة لكتابة CSS أنظف وتنظيم HTML بشكل صحيح.",
+  },
+  {
+    imgId: 2,
+    titleEn: "How to Stay Productive While Studying",
+    descEn:
+      "Planning your tasks and taking small breaks can boost your focus and efficiency.",
+    titleAr: "كيف تبقى منتجًا أثناء الدراسة",
+    descAr: "تنظيم المهام وأخذ فواصل قصيرة يساعد على التركيز والكفاءة.",
+  },
+  {
+    imgId: 3,
+    titleEn: "AI Tools Changing the Future",
+    descEn:
+      "New AI models are helping developers write code faster with improved accuracy.",
+    titleAr: "أدوات الذكاء الاصطناعي تغيّر المستقبل",
+    descAr: "نماذج جديدة تساعد المطورين على كتابة كود أسرع وبدقة أعلى.",
+  },
+  {
+    imgId: 4,
+    titleEn: "Minimalist UI Designs You Should Try",
+    descEn:
+      "Explore clean layouts and balanced spacing for a professional modern look.",
+    titleAr: "تصاميم UI بسيطة لازم تجربها",
+    descAr: "استكشف تصاميم نظيفة ومسافات متوازنة لمظهر احترافي حديث.",
+  },
+  {
+    imgId: 5,
+    titleEn: "Why Responsive Design Matters",
+    descEn:
+      "A responsive website improves user experience and adapts to any screen size.",
+    titleAr: "لماذا التصميم المتجاوب مهم؟",
+    descAr: "الموقع المتجاوب يحسن تجربة المستخدم ويتكيف مع أي شاشة.",
+  },
+  {
+    imgId: 6,
+    titleEn: "5 Healthy Habits for a Better Day",
+    descEn:
+      "Walking daily and drinking enough water can greatly improve your energy.",
+    titleAr: "5 عادات صحية ليوم أفضل",
+    descAr: "المشي يوميًا وشرب الماء كفاية يحسن طاقتك بشكل كبير.",
+  },
+];
+
 export default blogs;
