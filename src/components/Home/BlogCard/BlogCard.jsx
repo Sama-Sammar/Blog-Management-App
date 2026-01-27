@@ -2,34 +2,12 @@ import { Link, Form, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./BlogCard.module.css";
 
-function BlogCard({
-  id,
-  title,
-  description,
-  imgId,
-  titleEn,
-  descEn,
-  titleAr,
-  descAr,
-}) {
+function BlogCard({ id, title, description }) {
   const location = useLocation();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
-  const isArabic = i18n.language === "ar";
-
-  const displayTitle =
-    title && title.trim().length > 0
-      ? title
-      : isArabic
-        ? titleAr || titleEn || ""
-        : titleEn || titleAr || "";
-
-  const displayDesc =
-    description && description.trim().length > 0
-      ? description
-      : isArabic
-        ? descAr || descEn || ""
-        : descEn || descAr || "";
+  const displayTitle = title?.trim() || "";
+  const displayDesc = description?.trim() || "";
 
   return (
     <div className={styles.card}>
@@ -42,10 +20,7 @@ function BlogCard({
 
         <div className={styles.iconBar}>
           <Link
-            to={{
-              pathname: `/blog/${id}/edit`,
-              search: location.search,
-            }}
+            to={{ pathname: `/blog/${id}/edit`, search: location.search }}
             className={styles.iconBtn}
             aria-label={t("edit")}
             title={t("edit")}
@@ -57,10 +32,7 @@ function BlogCard({
 
           <Form
             method="post"
-            action={{
-              pathname: `/blog/${id}/delete`,
-              search: location.search,
-            }}
+            action={{ pathname: `/blog/${id}/delete`, search: location.search }}
           >
             <button
               type="submit"
