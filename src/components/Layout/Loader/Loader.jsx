@@ -1,21 +1,65 @@
-import { useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
+import { useNavigation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./Loader.module.css";
 
+const MIN_MS = 2000;
+
 function Loader() {
-  const loading = useSelector((state) => state.loader.loading);
+  const navigation = useNavigation();
   const { t } = useTranslation();
 
-  if (!loading) return null;
+  const [visible, setVisible] = useState(true); 
+  const minEndRef = useRef(Date.now() + MIN_MS);
+  const hideTimerRef = useRef(null);
+
+  const clearHideTimer = () => {
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+  };
+
+  const showForMin = () => {
+    clearHideTimer();
+    setVisible(true);
+    minEndRef.current = Date.now() + MIN_MS;
+  };
+
+  const hideWhenMinDone = () => {
+    clearHideTimer();
+    const remaining = minEndRef.current - Date.now();
+    hideTimerRef.current = setTimeout(() => {
+      if (navigation.state === "idle") {
+        setVisible(false);
+      }
+    }, Math.max(0, remaining));
+  };
+
+  useEffect(() => {
+    showForMin();
+    hideWhenMinDone();
+    return () => clearHideTimer();
+  }, []);
+
+  useEffect(() => {
+    if (navigation.state === "submitting" || navigation.state === "loading") {
+      showForMin();
+    } else if (navigation.state === "idle") {
+      hideWhenMinDone();
+    }
+  }, [navigation.state]);
+
+  if (!visible) return null;
 
   return (
-  <div className={styles.backdrop}>
-    <div className={styles.box}>
-      <div className={styles.spinner} />
-      <p className={styles.text}>{t("loadingBlogs")}</p>
+    <div className={styles.backdrop}>
+      <div className={styles.box}>
+        <div className={styles.spinner} />
+        <p className={styles.text}>{t("loadingBlogs")}</p>
+      </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default Loader;

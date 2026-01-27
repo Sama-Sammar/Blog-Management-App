@@ -1,6 +1,6 @@
 import { RouterProvider } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import router from "./configs/router-config";
+import router from "./config/router-config";
 import styles from "./components/Layout/Loader/Loader.module.css";
 
 function RouterFallback() {

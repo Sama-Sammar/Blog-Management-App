@@ -13,6 +13,7 @@
   "next": "Next",
   "pageOf": "Page {{current}} of {{total}}",
   "reset": "Reset Blogs",
+  "dataFromApi": "Data is loaded from API (JSON Server)",
   "validation": {
     "titleRequired": "Title is required",
     "titleMax": "Max length is 50",

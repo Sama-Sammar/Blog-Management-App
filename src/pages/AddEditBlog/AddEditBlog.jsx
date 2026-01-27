@@ -1,5 +1,8 @@
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
 import { useLoaderData, useLocation, useSubmit } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./AddEditBlog.module.css";
@@ -25,7 +28,6 @@ function AddEditBlog() {
     [location.pathname]
   );
 
-  const pageTitle = isEditMode ? t("editBlog") : t("addBlog");
   const submitText = isEditMode ? t("edit") : t("add");
 
   const titlePattern = useMemo(() => {
@@ -38,41 +40,48 @@ function AddEditBlog() {
     return /^[A-Za-z ]+$/;
   }, [isArabic]);
 
-  const titleRules = useMemo(() => {
-    const base = {
-      required: t("validation.titleRequired"),
-      maxLength: { value: 50, message: t("validation.titleMax") },
-      pattern: {
-        value: titlePattern,
-        message: isArabic
-          ? t("validation.titlePatternAr")
-          : t("validation.titlePatternEn"),
-      },
-    };
+  const schema = useMemo(() => {
+    const titleSchema = yup
+      .string()
+      .required(t("validation.titleRequired"))
+      .max(50, t("validation.titleMax"))
+      .matches(
+        titlePattern,
+        isArabic ? t("validation.titlePatternAr") : t("validation.titlePatternEn")
+      )
+      .test(
+        "trim-not-empty",
+        t("validation.titleRequired"),
+        (val) => !!val && val.trim().length > 0
+      );
 
-    if (!isArabic) {
-      base.validate = {
-        capitalFirstLetter: (value) =>
-          /^[A-Z]/.test(value) || t("validation.titleCapital"),
-      };
-    }
+    const titleWithCapital = isArabic
+      ? titleSchema
+      : titleSchema.test(
+          "capital-first-letter",
+          t("validation.titleCapital"),
+          (val) => (val ? /^[A-Z]/.test(val.trim()) : false)
+        );
 
-    return base;
-  }, [t, isArabic, titlePattern]);
+    const descSchema = yup
+      .string()
+      .required(t("validation.descRequired"))
+      .max(1000, t("validation.descMax"))
+      .matches(
+        descPattern,
+        isArabic ? t("validation.descPatternAr") : t("validation.descPatternEn")
+      )
+      .test(
+        "trim-not-empty",
+        t("validation.descRequired"),
+        (val) => !!val && val.trim().length > 0
+      );
 
-  const descriptionRules = useMemo(
-    () => ({
-      required: t("validation.descRequired"),
-      maxLength: { value: 1000, message: t("validation.descMax") },
-      pattern: {
-        value: descPattern,
-        message: isArabic
-          ? t("validation.descPatternAr")
-          : t("validation.descPatternEn"),
-      },
-    }),
-    [t, isArabic, descPattern]
-  );
+    return yup.object({
+      title: titleWithCapital,
+      description: descSchema,
+    });
+  }, [t, isArabic, titlePattern, descPattern]);
 
   const {
     register,
@@ -81,6 +90,7 @@ function AddEditBlog() {
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
+    resolver: yupResolver(schema),
     defaultValues: { title: "", description: "" },
   });
 
@@ -108,7 +118,6 @@ function AddEditBlog() {
 
   return (
     <main className={styles.container}>
-
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className={styles.field}>
           <label className={styles.label} htmlFor="title">
@@ -118,7 +127,7 @@ function AddEditBlog() {
             id="title"
             className={styles.input}
             type="text"
-            {...register("title", titleRules)}
+            {...register("title")}
           />
           {errors.title?.message && (
             <p className={styles.error}>{errors.title.message}</p>
@@ -133,7 +142,7 @@ function AddEditBlog() {
             id="description"
             className={styles.textarea}
             rows={6}
-            {...register("description", descriptionRules)}
+            {...register("description")}
           />
           {errors.description?.message && (
             <p className={styles.error}>{errors.description.message}</p>

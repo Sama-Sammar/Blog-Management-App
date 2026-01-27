@@ -1,55 +1,32 @@
-import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { startLoading, stopLoading } from "../../store/loaderSlice";
-
 import styles from "./Home.module.css";
 import BlogCard from "../../components/Home/BlogCard";
 import Pagination from "../../components/Home/Pagination";
 
 function Home() {
-  const { blogs, pagination } = useLoaderData();
-  const dispatch = useDispatch();
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    dispatch(startLoading());
-    setReady(false);
-
-    const timer = setTimeout(() => {
-      dispatch(stopLoading());
-      setReady(true);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [dispatch]);
+  const { blogs = [], pagination } = useLoaderData();
 
   return (
     <main className={styles.container}>
-      {ready && (
-        <>
-          <section className={styles.cards}>
-            {blogs.map((blog) => (
-              <BlogCard
-                key={blog.id}
-                id={blog.id}
-                imgId={blog.imgId}
-                title={blog.title}
-                description={blog.description}
-                titleEn={blog.titleEn}
-                descEn={blog.descEn}
-                titleAr={blog.titleAr}
-                descAr={blog.descAr}
-              />
-            ))}
-          </section>
+      <section className={styles.cards}>
+        {blogs.length === 0 ? (
+          <p>No blogs found.</p>
+        ) : (
+          blogs.map((blog) => (
+            <BlogCard
+              key={blog.id}
+              id={blog.id}
+              title={blog.title}
+              description={blog.description}
+            />
+          ))
+        )}
+      </section>
 
-          <Pagination
-            currentPage={pagination.currentPage}
-            totalPages={pagination.totalPages}
-          />
-        </>
-      )}
+      <Pagination
+        currentPage={pagination.currentPage}
+        totalPages={pagination.totalPages}
+      />
     </main>
   );
 }

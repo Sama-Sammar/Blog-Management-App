@@ -20,7 +20,7 @@ function Layout() {
 
       <main className={styles.main}>
         <h1 className={styles.pageTitle}>{pageTitle}</h1>
-        <Outlet />
+        <Outlet key={location.pathname + location.search} />
       </main>
 
       <Footer />
