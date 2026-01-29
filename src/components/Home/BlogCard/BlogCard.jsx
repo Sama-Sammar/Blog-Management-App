@@ -7,7 +7,7 @@ import { deleteBlog } from "../../../services/blogsService";
 function BlogCard({ id, title, description }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const displayTitle = title?.trim() || "";
   const displayDesc = description?.trim() || "";
