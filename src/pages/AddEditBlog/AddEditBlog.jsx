@@ -1,34 +1,26 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { useLoaderData, useLocation, useSubmit } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./AddEditBlog.module.css";
 
+import { addBlog, getBlogById, updateBlog } from "../../services/blogsService";
+
 function AddEditBlog() {
   const location = useLocation();
-  const submit = useSubmit();
+  const navigate = useNavigate();
+  const params = useParams();
+
   const { t, i18n } = useTranslation();
-
   const isArabic = i18n.language === "ar";
-
-  let loaderData = null;
-  try {
-    loaderData = useLoaderData();
-  } catch {
-    loaderData = null;
-  }
-
-  const blog = loaderData?.blog || null;
 
   const isEditMode = useMemo(
     () => location.pathname.includes("/edit"),
     [location.pathname]
   );
-
-  const submitText = isEditMode ? t("edit") : t("add");
 
   const titlePattern = useMemo(() => {
     if (isArabic) return /^[\p{Script=Arabic}\s]+$/u;
@@ -58,10 +50,10 @@ function AddEditBlog() {
     const titleWithCapital = isArabic
       ? titleSchema
       : titleSchema.test(
-          "capital-first-letter",
-          t("validation.titleCapital"),
-          (val) => (val ? /^[A-Z]/.test(val.trim()) : false)
-        );
+        "capital-first-letter",
+        t("validation.titleCapital"),
+        (val) => (val ? /^[A-Z]/.test(val.trim()) : false)
+      );
 
     const descSchema = yup
       .string()
@@ -94,27 +86,67 @@ function AddEditBlog() {
     defaultValues: { title: "", description: "" },
   });
 
+  const [loadingBlog, setLoadingBlog] = useState(false);
+
   useEffect(() => {
-    if (blog) {
-      reset({
-        title: blog.title || "",
-        description: blog.description || "",
-      });
-    } else {
-      reset({ title: "", description: "" });
+    let cancelled = false;
+
+    async function loadBlog() {
+      if (!isEditMode) {
+        reset({ title: "", description: "" });
+        return;
+      }
+
+      setLoadingBlog(true);
+      try {
+        const blog = await getBlogById(params.id);
+
+        if (cancelled) return;
+
+        if (!blog) {
+          const page = new URLSearchParams(location.search).get("page") || "1";
+          navigate(`/?page=${page}`, { replace: true });
+          return;
+        }
+
+        reset({
+          title: blog.title || "",
+          description: blog.description || "",
+        });
+      } finally {
+        if (!cancelled) setLoadingBlog(false);
+      }
     }
-  }, [blog, reset]);
 
-  const onSubmit = (data) => {
-    const fd = new FormData();
-    fd.append("title", data.title.trim());
-    fd.append("description", data.description.trim());
+    loadBlog();
+    return () => {
+      cancelled = true;
+    };
+  }, [isEditMode, params.id, reset, location.search, navigate]);
 
-    submit(fd, {
-      method: "post",
-      action: `${location.pathname}${location.search}`,
-    });
+  const onSubmit = async (data) => {
+    const title = data.title.trim();
+    const description = data.description.trim();
+    const page = new URLSearchParams(location.search).get("page") || "1";
+
+    if (isEditMode) {
+      await updateBlog(params.id, { title, description, lang: i18n.language });
+      const lang = i18n.language.startsWith("ar") ? "ar" : "en";
+      navigate(`/?lang=${lang}&page=${page}`);
+    } else {
+      await addBlog({ title, description, lang: i18n.language });
+      const lang = i18n.language.startsWith("ar") ? "ar" : "en";
+      navigate(`/?lang=${lang}&page=1`);
+    }
   };
+
+  if (isEditMode && loadingBlog) {
+    return (
+      <main className={styles.container}>
+        <p>{t("loadingBlogs")}</p>
+      </main>
+    );
+  }
 
   return (
     <main className={styles.container}>
@@ -150,7 +182,7 @@ function AddEditBlog() {
         </div>
 
         <button className={styles.submit} type="submit" disabled={!isValid}>
-          {submitText}
+          {isEditMode ? t("edit") : t("add")}
         </button>
       </form>
     </main>

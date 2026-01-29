@@ -1,13 +1,26 @@
-import { Link, Form, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./BlogCard.module.css";
 
+import { deleteBlog } from "../../../services/blogsService";
+
 function BlogCard({ id, title, description }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const displayTitle = title?.trim() || "";
   const displayDesc = description?.trim() || "";
+
+  const handleDelete = async () => {
+    await deleteBlog(id);
+
+    const params = new URLSearchParams(location.search);
+    const lang = params.get("lang") || (i18n.language.startsWith("ar") ? "ar" : "en");
+    params.set("lang", lang);
+
+    navigate(`/?${params.toString()}`);
+  };
 
   return (
     <div className={styles.card}>
@@ -30,21 +43,17 @@ function BlogCard({ id, title, description }) {
             </svg>
           </Link>
 
-          <Form
-            method="post"
-            action={{ pathname: `/blog/${id}/delete`, search: location.search }}
+          <button
+            type="button"
+            className={styles.iconBtn}
+            onClick={handleDelete}
+            aria-label={t("delete")}
+            title={t("delete")}
           >
-            <button
-              type="submit"
-              className={styles.iconBtn}
-              aria-label={t("delete")}
-              title={t("delete")}
-            >
-              <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6 7h12l-1 14H7L6 7zm3-3h6l1 2H8l1-2zM9 9h2v10H9V9zm4 0h2v10h-2V9z" />
-              </svg>
-            </button>
-          </Form>
+            <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 7h12l-1 14H7L6 7zm3-3h6l1 2H8l1-2zM9 9h2v10H9V9zm4 0h2v10h-2V9z" />
+            </svg>
+          </button>
         </div>
       </div>
 

@@ -1,14 +1,24 @@
 import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 
 function Header() {
   const { t, i18n } = useTranslation();
 
-  const toggleLang = () => {
-    const newLang = i18n.language === "en" ? "ar" : "en";
-    i18n.changeLanguage(newLang);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const toggleLang = async () => {
+    const newLang = i18n.language.startsWith("en") ? "ar" : "en";
+    await i18n.changeLanguage(newLang);
+
+    const params = new URLSearchParams(location.search);
+    params.set("lang", newLang);
+    params.set("page", "1");
+
+    navigate(`/?${params.toString()}`);
   };
 
   useEffect(() => {
