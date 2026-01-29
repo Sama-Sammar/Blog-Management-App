@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 
 function Header() {
@@ -22,10 +21,15 @@ function Header() {
   };
 
   useEffect(() => {
-    const isArabic = i18n.language === "ar";
-    document.documentElement.lang = i18n.language;
+    const isArabic = i18n.language.startsWith("ar");
+    document.documentElement.lang = isArabic ? "ar" : "en";
     document.documentElement.dir = isArabic ? "rtl" : "ltr";
   }, [i18n.language]);
+
+  const baseParams = new URLSearchParams(location.search);
+  if (!baseParams.get("lang")) {
+    baseParams.set("lang", i18n.language.startsWith("ar") ? "ar" : "en");
+  }
 
   return (
     <header className={styles.header}>
@@ -41,25 +45,21 @@ function Header() {
 
       <nav className={styles.nav}>
         <NavLink
-          to="/"
+          to={{ pathname: "/", search: baseParams.toString() }}
           className={({ isActive }) => (isActive ? styles.active : undefined)}
         >
           {t("home")}
         </NavLink>
 
         <NavLink
-          to="/blog/new"
+          to={{ pathname: "/blog/new", search: baseParams.toString() }}
           className={({ isActive }) => (isActive ? styles.active : undefined)}
         >
           {t("addBlog")}
         </NavLink>
 
-        <button
-          type="button"
-          className={styles.langBtn}
-          onClick={toggleLang}
-        >
-          {i18n.language === "en" ? "AR" : "EN"}
+        <button type="button" className={styles.langBtn} onClick={toggleLang}>
+          {i18n.language.startsWith("en") ? "AR" : "EN"}
         </button>
       </nav>
     </header>
