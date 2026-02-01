@@ -42,15 +42,13 @@ export async function getBlogById(id) {
 }
 
 export async function addBlog({ title, description, lang }) {
-  const normalized = (lang || "").toLowerCase().startsWith("ar") ? "ar" : "en";
-
   const res = await fetch(BLOGS_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       title,
       description,
-      lang: normalized,
+      lang: normalizeLang(lang),
       createdAt: Date.now(),
     }),
   });

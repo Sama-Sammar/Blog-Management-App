@@ -8,7 +8,6 @@ function Pagination({ currentPage, totalPages }) {
 
   const makeTo = (page) => {
     const params = new URLSearchParams(location.search);
-    if (!params.get("lang")) params.set("lang", "en");
     params.set("page", String(page));
     return `/?${params.toString()}`;
   };

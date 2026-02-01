@@ -89,53 +89,46 @@ function AddEditBlog() {
   const [loadingBlog, setLoadingBlog] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function loadBlog() {
-      if (!isEditMode) {
-        reset({ title: "", description: "" });
-        return;
-      }
-
-      setLoadingBlog(true);
-      try {
-        const blog = await getBlogById(params.id);
-
-        if (cancelled) return;
-
-        if (!blog) {
-          const page = new URLSearchParams(location.search).get("page") || "1";
-          navigate(`/?page=${page}`, { replace: true });
-          return;
-        }
-
-        reset({
-          title: blog.title || "",
-          description: blog.description || "",
-        });
-      } finally {
-        if (!cancelled) setLoadingBlog(false);
-      }
+    if (!isEditMode) {
+      reset({ title: "", description: "" });
+      return;
     }
 
     loadBlog();
-    return () => {
-      cancelled = true;
-    };
-  }, [isEditMode, params.id, reset, location.search, navigate]);
+  }, [isEditMode, params.id, reset, location.search, navigate, i18n.language]);
+
+  async function loadBlog() {
+    setLoadingBlog(true);
+    try {
+      const blog = await getBlogById(params.id);
+
+      if (!blog) {
+        const page = new URLSearchParams(location.search).get("page") || "1";
+        const lang = i18n.language.startsWith("ar") ? "ar" : "en";
+        navigate(`/?lang=${lang}&page=${page}`, { replace: true });
+        return;
+      }
+
+      reset({
+        title: blog.title || "",
+        description: blog.description || "",
+      });
+    } finally {
+      setLoadingBlog(false);
+    }
+  }
 
   const onSubmit = async (data) => {
     const title = data.title.trim();
     const description = data.description.trim();
     const page = new URLSearchParams(location.search).get("page") || "1";
+    const lang = i18n.language.startsWith("ar") ? "ar" : "en";
 
     if (isEditMode) {
       await updateBlog(params.id, { title, description, lang: i18n.language });
-      const lang = i18n.language.startsWith("ar") ? "ar" : "en";
       navigate(`/?lang=${lang}&page=${page}`);
     } else {
       await addBlog({ title, description, lang: i18n.language });
-      const lang = i18n.language.startsWith("ar") ? "ar" : "en";
       navigate(`/?lang=${lang}&page=1`);
     }
   };
